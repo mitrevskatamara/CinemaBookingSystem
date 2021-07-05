@@ -6,64 +6,50 @@ using System;
 
 namespace CinemaBookingSystem.Repository
 {
-    public class ApplicationDbContext : IdentityDbContext<CinemaBookingSystemApplicationUser>
+    public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
     {
-        public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
-            : base(options)
+        public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options)
         {
+
         }
 
-        public virtual DbSet<Product> Products { get; set; }
-        public virtual DbSet<ShoppingCart> ShoppingCarts { get; set; }
-        public virtual DbSet<ProductInShoppingCart> ProductInShoppingCarts { get; set; }
-        public virtual DbSet<ProductInOrder> ProductInOrders { get; set; }
+        public virtual DbSet<Movie> Movies { get; set; }
+        public virtual DbSet<Ticket> Tickets { get; set; }
         public virtual DbSet<Order> Orders { get; set; }
+        public virtual DbSet<ShoppingCart> ShoppingCarts { get; set; }
         public virtual DbSet<EmailMessage> EmailMessages { get; set; }
+
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
             base.OnModelCreating(builder);
 
-            builder.Entity<Product>()
+            builder.Entity<Movie>()
                 .Property(z => z.Id)
                 .ValueGeneratedOnAdd();
 
-            builder.Entity<ShoppingCart>()
-                .Property(z => z.Id)
-                .ValueGeneratedOnAdd();
-
-            //builder.Entity<ProductInShoppingCart>()
-            //    .HasKey(z => new { z.ProductId, z.ShoppingCartId });
-
-            builder.Entity<ProductInShoppingCart>()
-                .HasOne(z => z.Product)
-                .WithMany(z => z.ProductInShoppingCarts)
-                .HasForeignKey(z => z.ShoppingCartId);
-
-            builder.Entity<ProductInShoppingCart>()
-                .HasOne(z => z.ShoppingCart)
-                .WithMany(z => z.ProductInShoppingCarts)
-                .HasForeignKey(z => z.ProductId);
-
-
-            builder.Entity<ShoppingCart>()
-                .HasOne<CinemaBookingSystemApplicationUser>(z => z.Owner)
-                .WithOne(z => z.UserCart)
+            builder.Entity<ApplicationUser>()
+                .HasOne(z => z.UserCart)
+                .WithOne(z => z.Owner)
                 .HasForeignKey<ShoppingCart>(z => z.OwnerId);
 
+            builder.Entity<ShoppingCart>()
+                .HasMany(z => z.TicketsInShoppingCart)
+                .WithOne(z => z.ShoppingCart);
 
-            //builder.Entity<ProductInOrder>()
-            //   .HasKey(z => new { z.ProductId, z.OrderId });
+            builder.Entity<Order>()
+                .HasMany(z => z.Tickets)
+                .WithOne(z => z.Order);
 
-            builder.Entity<ProductInOrder>()
-                .HasOne(z => z.OrderedProduct)
-                .WithMany(z => z.ProductInOrders)
-                .HasForeignKey(z => z.OrderId);
+            builder.Entity<Order>()
+                .HasOne(z => z.User)
+                .WithMany(z => z.Orders);
 
-            builder.Entity<ProductInOrder>()
-                .HasOne(z => z.UserOrder)
-                .WithMany(z => z.ProductInOrders)
-                .HasForeignKey(z => z.ProductId);
+            builder.Entity<Ticket>()
+                .HasOne(z => z.Movie)
+                .WithOne(z => z.Ticket)
+                .HasForeignKey<Movie>(z => z.Id);
+
         }
     }
 }

@@ -25,8 +25,7 @@ namespace CinemaBookingSystem.Repository.Implementation
         {
             return entities
                 .Include(z => z.User)
-                .Include(z => z.ProductInOrders)
-                .Include("ProductInOrders.OrderedProduct")
+                .Include(z => z.Tickets)
                 .ToListAsync().Result;
         }
 
@@ -34,8 +33,7 @@ namespace CinemaBookingSystem.Repository.Implementation
         {
             return entities
                .Include(z => z.User)
-               .Include(z => z.ProductInOrders)
-               .Include("ProductInOrders.OrderedProduct")
+               .Include(z => z.Tickets)
                .SingleOrDefaultAsync(z => z.Id == model.Id).Result;
         }
     }

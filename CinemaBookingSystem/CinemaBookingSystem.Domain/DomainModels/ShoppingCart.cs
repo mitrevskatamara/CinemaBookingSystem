@@ -10,7 +10,7 @@ namespace CinemaBookingSystem.Domain.DomainModels
     {
 
         public string OwnerId { get; set; }
-        public CinemaBookingSystemApplicationUser Owner { get; set; }
-        public virtual ICollection<ProductInShoppingCart> ProductInShoppingCarts { get; set; }
+        public User Owner { get; set; }
+        public virtual ICollection<Ticket> TicketInShoppingCarts { get; set; }
     }
 }

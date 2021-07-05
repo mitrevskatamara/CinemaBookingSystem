@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace CinemaBookingSystem.Domain.Idenitity
 {
-    public class CinemaBookingSystemUser : IdentityUser
+    public class User : IdentityUser
     {
         public string FirstName { get; set; }
         public string LastName { get; set; }
